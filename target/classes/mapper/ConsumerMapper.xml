@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hanna.dao.ConsumerMapper">
+
+<!--  if的使用  -->
+    <select id="findConsumerByNameAndJobs"
+            parameterType="cn.hanna.mybatis.dao.ConsumerMapper"
+            resultType="cn.hanna.mybatis.pojo.Consumer">
+        select * from t_consumer
+<!-- where可以去掉第一个条件中的and，可以用来替代where 1=1 -->
+<!--        <where> -->
+<!--            <if test="username != null and username != ''">-->
+<!--                and username like concat('%',#{username},'%')-->
+<!--            </if>-->
+<!--            <if test="jobs != null and jobs != ''">-->
+<!--                and jobs = #{jobs}-->
+<!--            </if>-->
+<!--        </where>-->
+            <!--使用trim用where 替换 满足条件的and，如果多个条件满足，就只替换第一个-->
+                <trim prefix="where" prefixOverrides="and">
+                    <if test="username != null and username != ''">
+                        and username like concat('%',#{username},'%')
+                    </if>
+                    <if test="jobs != null and jobs != ''">
+                        and jobs = #{jobs}
+                    </if>
+                </trim>
+    </select>
+
+<!-- when choose otherwise进行查询   -->
+    <select id="findConsumerByNameOrJobs" parameterType="cn.hanna.mybatis.pojo.Consumer"
+    resultType="cn.hanna.mybatis.pojo.Consumer">
+        select * from t_consumer where 1 = 1
+        <choose>
+            <when test="username != null and username != ''">
+                and username like concat('%',#{username},'%');
+            </when>
+            <when test="jobs != null and jobs != ''">
+                and jobs = #{jobs};
+            </when>
+            <otherwise>
+                and phone is not null;
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateConsumerById" parameterType="cn.hanna.mybatis.pojo.Consumer">
+        <!--set会将满足条件的最后一个，去掉-->
+        update t_consumer
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="jobs != null and jobs != ''">
+                jobs = #{jobs},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            where id = #{id}
+        </set>
+    </update>
+<!--通过遍历数组进行查询-->
+    <select id="selectByIdArray" parameterType="int[]" resultType="cn.hanna.mybatis.pojo.Consumer">
+        select * from t_consumer where id in
+        <foreach collection="array" item="id" index="i"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+<!--  通过map集合的key进行查询  -->
+    <select id="selectByMap" parameterType="map" resultType="cn.hanna.mybatis.pojo.Consumer">
+        select * from t_consumer where jobs=#{jobs} and id in
+        <foreach collection="ids" index="i" item="id" open="("
+        separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+<select id="selectByIdList" parameterType="list" resultType="cn.hanna.mybatis.pojo.Consumer">
+    select * from t_consumer where id in
+<foreach collection="list" item="li" index="i"
+         open="(" separator="," close=")">
+    #{li}
+</foreach>
+</select>
+
+
+</mapper>

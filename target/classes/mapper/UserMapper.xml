@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hanna.mybatis.dao.UserMapper">
+        <!--  在当前mapper下，开启二级缓存，保证对该mapper操作的所有sqlSession
+          共同使用缓存结果-->
+    <cache></cache>
+    <!-- 根据id查询一条数据   -->
+    <select id="selectById" resultType="cn.hanna.mybatis.pojo.User"
+    parameterType="int">
+        select * from user where uid = #{id}
+    </select>
+    <!--查询全部数据-->
+    <select id="findAll" resultMap="selectALL" >
+        select * from user;
+    </select>
+    <resultMap id="selectALL" type="cn.hanna.mybatis.pojo.User">
+        <id  column="uid" property="uid"/>
+        <result property="uname" column="uname"/>
+        <result property="uage" column="uage"/>
+    </resultMap>
+    <!-- 插入数据  插入值直接写对象的属性名即可，不需要对象.属性名 -->
+    <insert id="addUser" parameterType="cn.hanna.mybatis.pojo.User"
+            useGeneratedKeys="true" keyProperty="uid">
+        insert into user (uname,uage)values (#{uname},#{uage});
+    </insert>
+    <!--  更新数据  -->
+    <update id="updateUserById" parameterType="cn.hanna.mybatis.pojo.User">
+        update user set uname = #{uname} where uid = #{uid};
+    </update>
+    <!-- 删除数据   -->
+    <delete id="deleteByUid" parameterType="int">
+        delete from user where uid = #{uid};
+    </delete>
+
+</mapper>

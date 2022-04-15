@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    构造器实例化-->
+    <!--  创建了一个 HelloSpring对象，起名为helloSpring，来交给spring容器进行保管 -->
+    <bean id="helloSpring" class="cn.hanna.spring5.pojo.HelloSpring">
+        <!--   为userName配置属性     -->
+        <property name="userName" value="张三"/>
+    </bean>
+
+    <!--  创建一个user3对象 constructor-arg之构造注入 -->
+    <bean id="user1" class="cn.hanna.spring5.bean.User3">
+        <constructor-arg name="id" value="1"/>
+        <constructor-arg name="name" value="zhangsan"/>
+        <constructor-arg name="password" value="123245767"/>
+    </bean>
+
+    <!--  property是setter方法注入  -->
+    <bean id="user2" class="cn.hanna.spring5.bean.User3">
+        <property name="id" value="2"/>
+        <property name="name" value="lisi"/>
+        <property name="password" value="465734476"/>
+    </bean>
+
+    <!-- 注入userDAOImpl   -->
+    <bean id="userDaoImpl" class="cn.hanna.spring5.dao.impl.UserDAOImpl">
+    </bean>
+
+    <!--  注入userServiceImpl  -->
+    <bean id="userServiceImpl" class="cn.hanna.spring5.service.impl.UserServiceImpl">
+    <!--   表示对ioc容器中某个bean进行引用     -->
+        <property name="userDAOImpl" ref="userDaoImpl"/>
+    </bean>
+
+<!--    静态工厂实例化-->
+
+<!--    实例工厂实例化-->
+</beans>

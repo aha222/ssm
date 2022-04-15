@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--环境配置 -->
+    <!-- 加载类路径下的属性文件-->
+    <properties resource="db.properties"/>
+    <!-- 默认id指定环境是开发还是测试   -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <!--数据库连接相关配置，读取db.properties配置文件中的内容-->
+                <property name="driver" value="${mysql.driver}"/>
+                <property name="url" value="${mysql.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+<!--        <environment id="test">-->
+<!--                <dataSource type=""></dataSource>-->
+<!--            <transactionManager type=""></transactionManager>-->
+<!--        </environment>-->
+    </environments>
+
+<!--    <settings>-->
+<!--&lt;!&ndash;        <setting name="logImpl" value="LOG4J"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;   开启mybatis全局二级缓存，保证所有的sqlSession公用查询结果     &ndash;&gt;-->
+<!--        <setting name="cacheEnabled" value="true"/>-->
+<!--    </settings>-->
+    <!-- mapper文件路径配置   -->
+    <mappers>
+        <mapper resource="mapper/UserMapper.xml"></mapper>
+        <mapper resource="mapper/ConsumerMapper.xml"></mapper>
+        <mapper resource="mapper/PersonMapper.xml"></mapper>
+        <mapper resource="mapper/CardMapper.xml"></mapper>
+        <mapper resource="mapper/User2Mapper.xml"></mapper>
+        <mapper resource="mapper/StudentMapper.xml"></mapper>
+        <mapper resource="mapper/CourseMapper.xml"></mapper>
+    </mappers>
+</configuration>

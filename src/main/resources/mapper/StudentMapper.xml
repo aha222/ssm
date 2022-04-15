@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.hanna.dao.StudentMapper">
+
+    <!--  嵌套查询  -->
+    <select id="findCoursesByStuId" parameterType="integer"
+    resultMap="findCoursesByStuIdResult">
+        select s.*,c.* from t_student s, t_course c, tb_stu_cour sc
+        where s.sid = sc.sid and c.cid = sc.cid and s.sid = #{id}
+    </select>
+    <resultMap id="findCoursesByStuIdResult" type="cn.hanna.mybatis.pojo.Student">
+        <id property="sid" column="sid"/>
+        <result property="sname" column="sname"/>
+        <collection property="courses" ofType="cn.hanna.mybatis.pojo.Course">
+            <id property="cid" column="cid"/>
+            <result property="cname" column="cname"/>
+        </collection>
+     </resultMap>
+
+    <!--  嵌套结果查询  -->
+    <select id="findCoursesByStuId2" parameterType="integer"
+            resultMap="findCoursesByStuId2Result">
+        select s.*,sc.cid from t_student s,tb_stu_cour sc where sc.sid = s.sid
+        and s.sid = #{sid} ;
+    </select>
+    <resultMap id="findCoursesByStuId2Result"
+               type="cn.hanna.mybatis.pojo.Student">
+        <id property="sid" column="sid"/>
+        <result property="sname" column="sname"/>
+        <collection property="courses"
+                    ofType="cn.hanna.mybatis.pojo.Course" column="cid"
+                    select="cn.hanna.mybatis.dao.CourseMapper.findCourseById">
+        </collection>
+    </resultMap>
+</mapper>
